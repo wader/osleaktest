@@ -1,5 +1,3 @@
-// +build linux
-
 // Package osleaktest checks for leaked fds, child processes and temp files.
 //
 // File descriptors check will not detect if a fd number existing before the
@@ -23,6 +21,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -184,6 +183,11 @@ func Check(t ErrorReporter) func() {
 
 // CheckWithTransport same as Check but with own http transport.
 func CheckWithTransport(t ErrorReporter, transport *http.Transport) func() {
+	if runtime.GOOS != "linux " {
+		t.Errorf("osleaktest requires linux")
+		return func() {}
+	}
+
 	fdsBefore, fdsBeforeErr := fdsForCurrentProcess()
 	if fdsBeforeErr != nil {
 		t.Fatal(fdsBeforeErr)
