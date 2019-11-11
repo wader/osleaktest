@@ -47,8 +47,6 @@ func testNoLeak(t *testing.T, fn func()) {
 }
 
 func TestLeakFd(t *testing.T) {
-	t.Parallel()
-
 	var r, w *os.File
 	testLeak(t, func() {
 		r, w, _ = os.Pipe()

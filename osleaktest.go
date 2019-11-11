@@ -21,7 +21,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -183,7 +182,7 @@ func Check(t ErrorReporter) func() {
 
 // CheckWithTransport same as Check but with own http transport.
 func CheckWithTransport(t ErrorReporter, transport *http.Transport) func() {
-	if runtime.GOOS != "linux " {
+	if !isLinux {
 		t.Errorf("osleaktest requires linux")
 		return func() {}
 	}
